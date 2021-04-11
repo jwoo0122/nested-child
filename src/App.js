@@ -1,25 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useMemo } from 'react'
+import Item from './Item'
 
-function App() {
+function App({children}) {
+  const [state, setState] = useState(false)
+
+  const computedChildren = useMemo(() => {
+    if (state) {
+      return children
+    }
+
+    /**
+     * Case 1: Nested
+     */
+    return [<Item key="4" id={4} />, children]
+
+    /**
+     * Case 2: Flat
+     */
+    // return [<Item key="0" id={0} />, ...children]
+  }, [children, state])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <button onClick={() => setState((prevState) => !prevState)}>
+        change state
+      </button>
+
+      { computedChildren }
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
